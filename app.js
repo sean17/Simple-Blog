@@ -33,6 +33,7 @@ app.get('/', function(req,res) {
   var r = Math.floor(Math.random() * 4)
   var date = new Date()
   var subjects = ["Cool White Kids", "Skeet Skeet mother fucker", "I love brown women", "I miss India"]
+  
   res.render("index", { 
     title:  names[r]+"| Home page", 
     date: date,
@@ -40,71 +41,46 @@ app.get('/', function(req,res) {
     email: emails[r]+"@buffalo.edu",
   })
 });
+
 var poststring = "";
 var result =[];
-app.get('/blog/:index', function(req, res) {
-  var posts = [{ author: "a", post: "abc" }, { author: "z", post: "xyz"}, { author: "sas", post: "sdfdsf" },{ author: "a", post: "a's sencond post" }];
-  for(i = 0; i < posts.length; i++) {
-      if(posts[i].author==req.params.index) {
-        try {
-          result.push(posts[i].post);
-        } catch(e) {
 
-        }
-      }
-    }
-    for (x=0; x < result.length; x++) {
-      poststring = poststring + (result[x] + ",");
-    }
-//      if(posts[req.params.index].author==)
-     // author:post
-  // req.params
+var posts = [ { id:1, author: "jack", subject: "abc" }, 
+              { id:2, author: "mak", subject: "xyz"}, 
+              { id:3, author: "sas", subject: "sdfdsf" },
+              { id:4, author: "jack", subject: "a's sencond post" }
+            ];
 
+//This maintains the blog post at the specified index
+var specAuth ="a";
+var specSubj ="a";
+var specBlogFull = "";
+app.get('/blog/:uid', function(req, res) {
+  for (var x = 0; x <posts.length; x ++) {
+     if (posts[x].id==req.params.uid){
+      specAuth = posts[x].author;
+      specSubj = posts[x].subject;
+    }
+  }
+ 
+   
+
+   specBlogFull = "<h2>"+specAuth + "</h2>" + "<br><p>" + specSubj + "</p>";
   res.render("blog", {
-//author: posts[req.params.index].author,//.author,
-    //post: posts[req.params.index].post//.pos
-    author: req.params.index,
-    post: poststring
+    author: specBlogFull
   })
 });
 
-app.get('/projects/:index', function(req, res) {
-  var posts = [{ author: "a", post: "abc" }, { author: "z", post: "xyz"}, { author: "sas", post: "sdfdsf" },{ author: "a", post: "a's sencond post" }];
-  for(i = 0; i < posts.length; i++) {
-      if(posts[i].author==req.params.index) {
-        var result = posts[i].post
-      }
-    }
-//      if(posts[req.params.index].author==)
-     // author:post
-  // req.params
+var AllPostString = "";
+//This maintains the all Blog Posts page!
+app.get('/blog', function(req, res) {
 
-  res.render("blog", {
-//author: posts[req.params.index].author,//.author,
-    //post: posts[req.params.index].post//.pos
-    author: req.params.index,
-    post: result
-  })
-});
-app.get('/allPosts/:xzy', function(req, res) {
-  //Dumby array of authors and posts
-  var posts = [{ author: "a", post: "abc" }, { author: "z", post: "xyz"}, { author: "sas", post: "sdfdsf" },];
-  for(i = 0; i < posts.length; i++) {
-    console.log("abd");
-    //Check to see if the user is an author of any posts
-      if(posts[i].author==req.params.xzy) {
-        //If user is an author, display the post
-        var result = posts[i].post
-      }
-    }
-    //Render the blog page, updating the author and posts dynamically
+ for (var q = 0; q < posts.length; q++){
+    AllPostString = AllPostString + "<li>" + "<a href=\"/blog/"+posts[q].id + "\">" + posts[q].subject + "</a></li>";
+  }
   res.render("allPosts", {
-    author: req.params.xzy,
-    post: result
+   AllPosts: AllPostString
   })
-});
-app.get('/projects', function(req,res) {
-  res.render("projects", { title: "Sean Zaw | Project page"})
 });
 
 app.listen(3000);
