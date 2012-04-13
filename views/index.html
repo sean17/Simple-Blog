@@ -1,11 +1,4 @@
-{{layout "layout"}}
-
-<div id="doc2" class="yui-t1">
-	<div id="inner">
-	
-		<div id="hd">
-			<div class="yui-gc">
-				<div class="yui-u first">
-					<h1>Welcome - ${name}, to our wonderful blog</h1>
-						<h3>The current time is ${date}</h3>
-					
+<form method="post" action="/">
+  <input type="text" name="inputUser" id="inputUser" value="<%= userData %>" />
+  <div id="box"><%- divData %></div>
+</form>

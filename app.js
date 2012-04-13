@@ -3,9 +3,8 @@
  * Module dependencies.
  */
 
-var express = require('express')
-var jqtpl = require("jqtpl")
-
+var express = require('express');
+var jqtpl = require("jqtpl");
 var app = module.exports = express.createServer();
 
 // Configuration
@@ -26,24 +25,21 @@ app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
-// Routes
-app.get('/', function(req,res) {
-  var names = ["Sean", "Micheal", "Dinesh", "Magil"]
-  var emails = ["seanzawi", "micheala", "dineshra", "magil"]
-  var r = Math.floor(Math.random() * 4)
-  var date = new Date()
-  var subjects = ["Cool White Kids", "Skeet Skeet mother fucker", "I love brown women", "I miss India"]
+// // Routes
+// app.get('/', function(req,res) {
+//   var names = ["Sean", "Micheal", "Dinesh", "Magil"]
+//   var emails = ["seanzawi", "micheala", "dineshra", "magil"]
+//   var r = Math.floor(Math.random() * 4)
+//   var date = new Date()
+//   var subjects = ["Cool White Kids", "Skeet Skeet mother fucker", "I love brown women", "I miss India"]
   
-  res.render("index", { 
-    title:  names[r]+"| Home page", 
-    date: date,
-    name: names[r],
-    email: emails[r]+"@buffalo.edu",
-  })
-});
-
-var poststring = "";
-var result =[];
+//   res.render("index", { 
+//     title:  names[r]+"| Home page", 
+//     date: date,
+//     name: names[r],
+//     email: emails[r]+"@buffalo.edu",
+//   })
+// });
 
 var posts = [ { id:1, author: "jack", subject: "abc" }, 
               { id:2, author: "mak", subject: "xyz"}, 
@@ -52,36 +48,52 @@ var posts = [ { id:1, author: "jack", subject: "abc" },
             ];
 
 //This maintains the blog post at the specified index
-var specAuth ="a";
-var specSubj ="a";
-var specBlogFull = "";
 app.get('/blog/:uid', function(req, res) {
+
+  var result;
+
   for (var x = 0; x <posts.length; x ++) {
      if (posts[x].id==req.params.uid){
-      specAuth = posts[x].author;
-      specSubj = posts[x].subject;
+      console.log(req.params.uid);
+      console.log(posts[x]);
+      result = posts[x] // { id:3, author: "sas", subject: "sdfdsf" } 
     }
   }
- 
-   
 
-   specBlogFull = "<h2>"+specAuth + "</h2>" + "<br><p>" + specSubj + "</p>";
   res.render("blog", {
-    author: specBlogFull
+    post: result
   })
 });
 
-var AllPostString = "";
+
 //This maintains the all Blog Posts page!
 app.get('/blog', function(req, res) {
-
- for (var q = 0; q < posts.length; q++){
-    AllPostString = AllPostString + "<li>" + "<a href=\"/blog/"+posts[q].id + "\">" + posts[q].subject + "</a></li>";
-  }
+  
   res.render("allPosts", {
-   AllPosts: AllPostString
+    posts: posts
+  })
+
+});
+
+app.get('/create', function(req, res) {
+
+  res.render("create", {
+
   })
 });
+
+app.post('/handleReq', function(req, res) {
+    console.log(req.body.user);
+    posts.push(req.body.user);
+    var q = posts.length;
+    console.log(posts[q-1]);
+  
+  res.render("allPosts", {
+    posts:posts
+  })
+
+});
+
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
