@@ -79,6 +79,30 @@ app.post('/handleReq', function(req, res) {
 
 });
 
+//Add in an edit page
+//This page will be accessed from the specifics page
+//access the 
+var indexPost;
+app.get('/edit/:index', function(req, res) {
+   var specPost;
+   indexPost = req.params.index;
+  for (var x = 0; x <posts.length; x ++) {
+     if (posts[x].id==req.params.uid){
+      specPost = posts[x]; // { id:3, : "sas", subject: "sdfdsf" } 
+    }
+  }
+  res.render("edit", {
+    post: specPost
+  })
+});
+
+app.post('/editResult', function(req, res) {
+  var specPost;
+  posts[indexPost] = req.body.user;
+  res.render("allPosts", {
+    posts:posts
+  })
+});
 
 app.listen(3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
