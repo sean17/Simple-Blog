@@ -13,7 +13,6 @@ app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set("view engine", "html");
   app.register(".html", jqtpl.express);
-  // app.set('view engine', 'jade');
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -26,48 +25,33 @@ app.configure('development', function(){
 });
 
 // // Routes
-// app.get('/', function(req,res) {
-//   var names = ["Sean", "Micheal", "Dinesh", "Magil"]
-//   var emails = ["seanzawi", "micheala", "dineshra", "magil"]
-//   var r = Math.floor(Math.random() * 4)
-//   var date = new Date()
-//   var subjects = ["Cool White Kids", "Skeet Skeet mother fucker", "I love brown women", "I miss India"]
-  
-//   res.render("index", { 
-//     title:  names[r]+"| Home page", 
-//     date: date,
-//     name: names[r],
-//     email: emails[r]+"@buffalo.edu",
-//   })
-// });
-
-var posts = [ { id:1, author: "jack", subject: "abc" }, 
-              { id:2, author: "mak", subject: "xyz"}, 
-              { id:3, author: "sas", subject: "sdfdsf" },
-              { id:4, author: "jack", subject: "a's sencond post" }
+//The pseudo database collection that we start with
+var posts = [ { id:0, author: "jack", subject: "abc" }, 
+              { id:1, author: "mak", subject: "xyz"}, 
+              { id:2, author: "sas", subject: "sdfdsf" },
+              { id:3, author: "jack", subject: "a's sencond post" }
             ];
 
 //This maintains the blog post at the specified index
 app.get('/blog/:uid', function(req, res) {
-
-  var result;
+//specPost 
+  var specPost;
 
   for (var x = 0; x <posts.length; x ++) {
      if (posts[x].id==req.params.uid){
-      console.log(req.params.uid);
-      console.log(posts[x]);
-      result = posts[x] // { id:3, author: "sas", subject: "sdfdsf" } 
+      specPost = posts[x]; // { id:3, author: "sas", subject: "sdfdsf" } 
     }
   }
 
   res.render("blog", {
-    post: result
+    post: specPost
   })
 });
 
 
 //This maintains the all Blog Posts page!
 app.get('/blog', function(req, res) {
+
   
   res.render("allPosts", {
     posts: posts
@@ -75,19 +59,20 @@ app.get('/blog', function(req, res) {
 
 });
 
+//Renders the new post page
 app.get('/create', function(req, res) {
 
   res.render("create", {
-
   })
 });
 
+//receives the post request from create.html, adds the new post to 
+//the pseudo db and pushes back to allposts
 app.post('/handleReq', function(req, res) {
-    console.log(req.body.user);
     posts.push(req.body.user);
-    var q = posts.length;
-    console.log(posts[q-1]);
-  
+    var q = posts.length-1;
+    posts[q].id = q;
+
   res.render("allPosts", {
     posts:posts
   })
