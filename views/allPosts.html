@@ -4,6 +4,6 @@
 
 <ul>
 {{each(i, post) posts}}
-<li><a href='/blog/${post.subject}'>${post.subject}</a>, content is ${post.cont} by ${post.author}</li>
+<li>Subject: <a href='/blog/${post.subject}'>${post.subject}</a></br> Content: ${post.cont} </br>Author ${post.author}</br>Time: ${post.timeVal}</li>
 {{/each}}
 </ul>

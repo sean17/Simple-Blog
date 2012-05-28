@@ -19,7 +19,9 @@ var arrayOBJ = [];
 var eachandeverypost;
 var indexPost;
 indexPostOld = "";
-   
+var timeVal = new Date;
+var newTime = timeVal.getTime();
+var listOfPosts = [];
 // Configuration
 //Setting up the server to handle certain views, makes this much more modular!
 app.configure(function(){
@@ -43,15 +45,16 @@ app.configure('development', function(){
   
 // client.set("All", stringfja);
             //This is filling up the redis db with values
-stringfja = { author: "jack", subject: "abc", cont: "First set of content", time:"" };
+
+/*
+stringfja = { author: "jack", subject: "abc", cont: "First set of content", timeVal:newTime };
   client.set(stringfja.subject, JSON.stringify(stringfja));
-  console.log(stringfja.subject)
-  stringfja = { author: "mak", subject: "xyz", cont: "Second set of content", time:""};
+  stringfja = { author: "mak", subject: "xyz", cont: "Second set of content", timeVal:newTime};
   client.set(stringfja.subject, JSON.stringify(stringfja));
-  console.log(stringfja.subject)
+ 
 
 var listOfPosts = ["abc", "xyz"];
-/*
+*//*
 key = "blog"
 
 value = Array of posts
@@ -90,11 +93,8 @@ app.post("/create", function (req, res)) {
 //This maintains the blog post at the specified index
 app.get('/blog/:uid', function(req, res) {
   //use the uid as a key for redis, return value to render specPost
-  console.log('fuck you i"m in Blog/uid');
   var xqa = req.params.uid;
-  console.log(xqa);
   client.get(xqa, function (err, reply) {
-        console.log(reply); // Will print `OK`
         specPost = JSON.parse(reply);
         res.render("blog", {
         post: specPost
@@ -116,10 +116,12 @@ x = 0;
 xaz = 0;
 var xyza = null;
 collectDB(x, function() {
+  if(listOfPosts[0] ==null) {
+    res.render("allPosts");
+  }
     for(x = 0; x < listOfPosts.length; x++) {
        xyza = listOfPosts[x]
-       console.log('console size = '+ xyza);
-      client.get(xyza, function (err, reply) {
+       client.get(xyza, function (err, reply) {
         if (err) {
           console.log('error');
         }
@@ -161,9 +163,8 @@ app.post('/create', function(req, res) {
   valueCont = value.cont.toString();
   postObject = req.body.user;
   var subject = postObject.subject;
-  stringfja = {author: valueAuth, subject: valueSubj, cont: valueCont, time:"" };
-  //client.set(stringfja.subject, JSON.stringify(stringfja));
-  //console.log('postObject at this point equals' + postObject + 'and the subject ==' + postObject.subject);
+  var newTime = timeVal.getTime();
+  stringfja = {author: valueAuth, subject: valueSubj, cont: valueCont, timeVal:newTime };
   listOfPosts.unshift(stringfja.subject) 
   client.set(stringfja.subject, JSON.stringify(stringfja), function ( err, result ) {
     if (err) exit(1);
@@ -185,11 +186,9 @@ app.get('/new', function(req, res) {
 //access the 
 app.get('/edit/:index', function(req, res) {
    indexPost = req.params.index;
-   console.log(indexPost+'howdy, im the index post');
-   //indexPost = indexPost.subject;
+  //indexPost = indexPost.subject;
    indexPostOld = indexPost;
    client.get(indexPost, function (err, reply) {
-    console.log(indexPost);
         indexPost = JSON.parse(reply); // Will print `OK`
     });
   res.render("edit", {
@@ -198,18 +197,15 @@ app.get('/edit/:index', function(req, res) {
 });
 
 app.post('/editResult', function(req, res) {
-  //console.log(req.body.user);
-  //console.log(indexPostOld);
   var value = req.body.user;
   valueAuth = value.author.toString();
   valueSubj = value.subject.toString();
   valueCont = value.cont.toString();
   for(x = 0; x < listOfPosts.length; x++) {
-    stringfja = {author: JSON.stringify(valueAuth), subject: JSON.stringify(valueSubj), cont: valueCont, time:"" };
+    stringfja = {author: JSON.stringify(valueAuth), subject: JSON.stringify(valueSubj), cont: valueCont, timeVal:newTime };
     if(listOfPosts[x]==indexPostOld){
         listOfPosts[x] = value.subject;
-        value.time = "sometime";
-        console.log('the time of the post is : ' + JSON.stringify(value)+ 'the author is' + value.author);
+        //value.time = "sometime";
         client.set(valueSubj, JSON.stringify(value));
         res.redirect('/blog');
     }
