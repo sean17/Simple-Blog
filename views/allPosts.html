@@ -1,9 +1,9 @@
-<a href='/create'>Create Post</a>
+<a href='/new'>Create Post</a>
 
 <h1>All posts</h1>
 
 <ul>
 {{each(i, post) posts}}
-<li><a href='/blog/${post.id}'>${post.subject}</a> by ${post.author}</li>
+<li><a href='/blog/${post.subject}'>${post.subject}</a>, content is ${post.cont} by ${post.author}</li>
 {{/each}}
 </ul>
