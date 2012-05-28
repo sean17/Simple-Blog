@@ -155,14 +155,16 @@ var postContent = "random text";
 var postAuthor;
 app.post('/create', function(req, res) {
   // globalVar++
+  var value = req.body.user;
+  valueAuth = value.author.toString();
+  valueSubj = value.subject.toString();
+  valueCont = value.cont.toString();
   postObject = req.body.user;
   var subject = postObject.subject;
-  console.log(subject + '-----------jalfdksjlafeij');
-  stringfja = {author: JSON.stringify(postObject.author), subject: JSON.stringify(postObject.subject), cont: "First set of content", time:"" };
+  stringfja = {author: valueAuth, subject: valueSubj, cont: valueCont, time:"" };
   //client.set(stringfja.subject, JSON.stringify(stringfja));
   //console.log('postObject at this point equals' + postObject + 'and the subject ==' + postObject.subject);
   listOfPosts.unshift(stringfja.subject) 
-  console.log("the list of posts at 0 is: " + listOfPosts[0]);
   client.set(stringfja.subject, JSON.stringify(stringfja), function ( err, result ) {
     if (err) exit(1);
     numOfPosts++;
