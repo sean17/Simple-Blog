@@ -2,23 +2,24 @@
 /**
  * Module dependencies.
  */
-
-var express = require('express');
-var jqtpl = require("jqtpl");
-var app = module.exports = express.createServer();
-var redis = require("redis"),
-        client = redis.createClient(null, null, {detect_buffers: true});
-var lengthx = 2;
-var specPost;
-var array = [];
-var posts = [];
-var x = 1;
-var numOfPosts = 0;
-var arrayLength;
-var arrayOBJ = [];
-var eachandeverypost;
-var indexPost;
-indexPostOld = "";
+var express = require('express'),
+    jqtpl = require("jqtpl"),
+    app = module.exports = express.createServer(),
+    redis = require("redis"),
+    client = redis.createClient(null, null, {detect_buffers: true}),
+    specPost,
+    posts = [],
+    x = 1,
+    numOfPosts = 0,
+    arrayLength,
+    arrayOBJ = [],
+    indexPost,
+    indexPostOld = "",
+    clientLength = 10,
+    postObject;
+var postSubject;
+var postContent = "random text";
+var postAuthor;
 var timeVal = new Date;
 var newTime = timeVal.getTime();
 var listOfPosts = [];
@@ -112,7 +113,6 @@ function renderResults(resultReturn, sendResults) {
 
 //This maintains the all Blog Posts page!
 app.get('/blog', function(req, res) {
-x = 0;
 xaz = 0;
 var xyza = null;
 collectDB(x, function() {
@@ -149,12 +149,7 @@ function respondClient(reqb, resb) {
     
 //receives the post request from create.html, adds the new post to 
 //the pseudo db and pushes back to allposts
-var postabc;
-clientLength = 10;
-var postObject;
-var postSubject;
-var postContent = "random text";
-var postAuthor;
+
 app.post('/create', function(req, res) {
   // globalVar++
   var value = req.body.user;
@@ -201,6 +196,7 @@ app.post('/editResult', function(req, res) {
   valueAuth = value.author.toString();
   valueSubj = value.subject.toString();
   valueCont = value.cont.toString();
+  newTime = timeVal.getTime();
   for(x = 0; x < listOfPosts.length; x++) {
     stringfja = {author: JSON.stringify(valueAuth), subject: JSON.stringify(valueSubj), cont: valueCont, timeVal:newTime };
     if(listOfPosts[x]==indexPostOld){

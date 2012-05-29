@@ -1,4 +1,19 @@
 {{layout "layout"}}
+    <script type="text/javascript" src="//platform.twitter.com/widgets.js">
+    var intent = new Intent("http://webintents.org/share", 
+  "text/uri-list", 
+  "http://news.bbc.co.uk");
+
+window.navigator.startActivity(intent);</script>
+    <p>If you're interested in that Twitter stuff.....</br><a href="https://twitter.com/intent/tweet?in_reply_to=51113028241989632">Reply</a>
+    <a href="https://twitter.com/intent/retweet?tweet_id=51113028241989632">Retweet</a>
+    <a href="https://twitter.com/intent/favorite?tweet_id=51113028241989632">Favorite</a></p>
+<intent
+  action="http://webintents.org/share" 
+  type="image/*" 
+  href="share.html"
+  disposition="window|inline"
+ />
 <script>
 var x = ${post.id}
 </script>
